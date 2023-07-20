@@ -14,6 +14,7 @@ export const UserProvider = ({ children,uid,setUid }) => {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading,setLoading] = useState(false);
+    const [pageToggler,setPageToggler] = useState("home");
     
     const navigate = useNavigate();
     const signOutUser = () => {
@@ -41,7 +42,7 @@ export const UserProvider = ({ children,uid,setUid }) => {
 
                 // Signed in 
                 const user = userCredential.user;
-                setUid(user.uid);
+                
                 toast.success('Account created successfully');
                 
                 setTimeout(() => {
@@ -77,7 +78,7 @@ export const UserProvider = ({ children,uid,setUid }) => {
                 // Signed in 
                 const user = userCredential.user;
                 setIsLoggedIn(true);
-
+                setUid(user.uid);
                 toast.success('Log in successful');
                 setTimeout(() => {
                     
@@ -100,7 +101,7 @@ export const UserProvider = ({ children,uid,setUid }) => {
 
     }
 
-    return (<userContext.Provider value={{uid,loading,setLoading, createUser, signInUser, isLoggedIn, setIsLoggedIn, signOutUser }}>
+    return (<userContext.Provider value={{pageToggler,setPageToggler,uid,loading,setLoading, createUser, signInUser, isLoggedIn, setIsLoggedIn, signOutUser }}>
         {children}
 
     </userContext.Provider>)

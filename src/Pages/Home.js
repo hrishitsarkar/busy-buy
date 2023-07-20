@@ -6,11 +6,12 @@ import ProductCard from "../Components/ProductCard";
 
 
 const Home = () => {
-    const { loading, setLoading, } = useUserValue();
+    const { loading, setLoading,setPageToggler } = useUserValue();
     const { getProducts, products, range, setRange,addProducts } = useProductValue();
 
     useEffect(() => {
         setLoading(true);
+        setPageToggler('home')
         setTimeout(()=>{
             getProducts();
             setLoading(false);
@@ -18,6 +19,7 @@ const Home = () => {
         
 
     }, [])
+    console.log(products);
     return (<>
         {loading ? <div className="flex items-center justify-center fixed top-0 left-0 w-full h-full"><SyncLoader color="#060606" /></div> :
             <div className="w-full flex flex-row p-5 ">

@@ -14,9 +14,9 @@ function App() {
   const [uid,setUid] = useState('');
   return (
     <>
-      
-        <ProductProvider>
-          <UserProvider uid={uid} setUid={setUid}>
+      <UserProvider uid={uid} setUid={setUid}>
+        <ProductProvider uid={uid}>
+          
             <Navbar />
             <Routes>
               <Route path='/' element = {<Home />} />
@@ -27,8 +27,9 @@ function App() {
             </Routes>
 
             
-          </UserProvider>
+          
         </ProductProvider>
+        </UserProvider>
       
       
     </>
