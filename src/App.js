@@ -25,11 +25,12 @@ function App() {
               <Route path={`/userCarts/${uid}/myCart`} element = {<Cart />} />
               
             </Routes>
+            </ProductProvider>
+        </UserProvider>
 
             
           
-        </ProductProvider>
-        </UserProvider>
+        
       
       
     </>

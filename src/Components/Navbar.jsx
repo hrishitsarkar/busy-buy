@@ -3,9 +3,12 @@ import search from './s.png'
 import { Link, Outlet } from 'react-router-dom'
 
 import { useUserValue } from '../userContext'
+import { useProductValue } from '../productContext'
 
 const Navbar = () => {
-    const { isLoggedIn,signOutUser,uid } = useUserValue();
+    const { isLoggedIn,signOutUser,uid, } = useUserValue();
+    const {handleChange} = useProductValue();
+    
     
     return (
         <>
@@ -29,6 +32,7 @@ const Navbar = () => {
                         alt='search'
                     />
                     <input
+                        onChange={handleChange}
                         type='search'
                         placeholder='Search by name'
                         className='w-full outline-0 p-2 bg-inherit rounded-lg'

@@ -6,39 +6,56 @@ import ProductCard from "../Components/ProductCard";
 
 
 const Home = () => {
-    const { loading, setLoading,setPageToggler } = useUserValue();
-    const { getProducts, products, range, setRange,addProducts } = useProductValue();
-
+    const { loading, setLoading, setPageToggler } = useUserValue();
+    const { checkBox,searchTerm,selectedPriceRange,handleChange,setEnableSearch,category,setResults,enableSearch, results, getProducts, products, range, setRange, addProducts, handleFilter } = useProductValue();
+    console.log(results)
     useEffect(() => {
         setLoading(true);
         setPageToggler('home')
-        setTimeout(()=>{
-            getProducts();
+        setTimeout(() => {
+           
+                getProducts();
+
+            
             setLoading(false);
-        },1000)
-        
+        }, 1000)
+
 
     }, [])
-    console.log(products);
+    useEffect(() => {
+        
+        handleFilter();
+        
+        
+        
+      }, [category,searchTerm,selectedPriceRange]);
+    useEffect(()=>{
+        if(results.length === 0){
+            setEnableSearch(false)
+        }
+    },[results])
+    
     return (<>
         {loading ? <div className="flex items-center justify-center fixed top-0 left-0 w-full h-full"><SyncLoader color="#060606" /></div> :
             <div className="w-full flex flex-row p-5 ">
                 <div className="w-[20%] flex flex-col items-center bg-gray-100 h-full ">
                     <h1 className="font-bold m-5 text-[2rem]">Filters</h1>
                     <h1 className="font-bold m-5">Price : {range} </h1>
-                    <input className="m-5 w-[80%]" type="range" min={1} max={100000} step={1} value={range} onChange={(e) => setRange(Number(e.target.value))} />
+                    <input className="m-5 w-[80%]"  type="range" min={1} max={100000} step={1} value={range} onChange={handleChange} />
                     <h1 className="font-bold m-5 text-[1.5rem] text-violet-700">Category</h1>
                     <div className="flex flex-col items-left p-2 flex-wrap">
-                    <span className="flex flex-row items-center"><input type="checkbox" className="m-2" /> <p>Mens Clothing</p></span>
-                        <span className="flex flex-row items-center"><input type="checkbox" className="m-2" /><p>Womens Clothing</p></span>
-                        <span className="flex flex-row items-center"><input type="checkbox" className="m-2" /><p>Electronics</p></span>
-                        <span className="flex flex-row items-center"><input type="checkbox"  className="m-2" /><p>Books</p></span>
+
+                        <span className="flex flex-row items-center"><input type="checkbox" value='men' className="m-2" onChange={handleChange} /> <p>Mens Clothing</p></span>
+                        <span className="flex flex-row items-center"><input type="checkbox" value='women' className="m-2" onChange={handleChange} /><p>Womens Clothing</p></span>
+                        <span className="flex flex-row items-center"><input type="checkbox" value='electronic' className="m-2" onChange={handleChange} /><p>Electronics</p></span>
+                        <span className="flex flex-row items-center"><input type="checkbox" value='book' className="m-2" onChange={handleChange} /><p>Books</p></span>
                     </div>
 
 
                 </div>
                 <div className="w-[80%] flex flex-row flex-wrap items-center justify-around">
-                    {products.map((product, i) => (<ProductCard product={product} key={i} />))}
+                    {enableSearch ? results.map((product, i) => (<ProductCard product={product} key={i} />)) : products.map((product, i) => (<ProductCard product={product} key={i} />))}
+
                 </div>
             </div>}
     </>)
