@@ -7,7 +7,7 @@ import ProductCard from "../Components/ProductCard";
 
 const Home = () => {
     const { loading, setLoading, setPageToggler } = useUserValue();
-    const { checkBox,searchTerm,selectedPriceRange,handleChangeCheck,handleChange,setEnableSearch,category,setResults,enableSearch, results, getProducts, products, range, setRange, addProducts, handleFilter } = useProductValue();
+    const {handleRange, productFilter,checkBox,searchTerm,selectedPriceRange,handleChangeCheck,handleChange,setEnableSearch,category,setResults,enableSearch, results, getProducts, products, range, setRange, addProducts, handleFilter } = useProductValue();
     console.log('res',results)
     useEffect(() => {
         setLoading(true);
@@ -28,7 +28,7 @@ const Home = () => {
         
         
         
-      }, [category,searchTerm,selectedPriceRange]);
+      }, [productFilter,searchTerm]);
     useEffect(()=>{
         if(results.length === 0){
             setEnableSearch(false)
@@ -41,7 +41,7 @@ const Home = () => {
                 <div className="w-[20%] flex flex-col items-center bg-gray-100 h-full ">
                     <h1 className="font-bold m-5 text-[2rem]">Filters</h1>
                     <h1 className="font-bold m-5">Price : {range} </h1>
-                    <input className="m-5 w-[80%]"  type="range" min={1} max={100000} step={1} value={range} onChange={handleChange} />
+                    <input className="m-5 w-[80%]"  type="range" min={1} max={100000} step={1} value={range} onChange={handleRange} />
                     <h1 className="font-bold m-5 text-[1.5rem] text-violet-700">Category</h1>
                     <div className="flex flex-col items-left p-2 flex-wrap">
 

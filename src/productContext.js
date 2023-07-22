@@ -14,107 +14,127 @@ export const useProductValue = () => {
 export const ProductProvider = ({ children, uid }) => {
 
     const [loadingProduct, setLoadingProduct] = useState({});
-    const [loadingOrders,setLoadingOrders] = useState(false);
+    const [loadingOrders, setLoadingOrders] = useState(false);
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
     const navigate = useNavigate();
     const [range, setRange] = useState()
-    const [selectedPriceRange, setSelectedPriceRange] = useState([0, 7500]);
+    const [selectedPriceRange, setSelectedPriceRange] = useState({min : 0,max : 0});
     const [total, setTotal] = useState(0);
     const [category, setCategory] = useState([])
     const [results, setResults] = useState([]);
     const [enableSearch, setEnableSearch] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    const [productFilter,setProductFilter] = useState('men');
+    const [productFilter, setProductFilter] = useState([]);
+    const [orders, setOrders] = useState([]);
     const checkbox = (e) => {
-        
+
     }
-    const handleChangeCheck = (e) => {
-        // setSearchTerm(e.target.value);
-        // console.log(searchTerm);
-        console.log('val :' ,e.target.value)
-        setProductFilter(e.target.value);
-        console.log('productFilter',productFilter)
-        // const recentCategory = e.target.value;
-        // if (e.target.checked) {
-        //     setCategory((prevState) => {
-        //         const filtered = [...prevState, recentCategory]
-        //         return filtered;
-        //     });
-
-        // } else {
-        //     setCategory((prevState) => {
-        //         const filtered = prevState.filter((selected) => selected !== recentCategory)
-        //         return filtered
-
-        //     })
-        // }
-
-        // const minPrice = parseInt(e.target.value[0]);
-        // const maxPrice = parseInt(e.target.value[1]);
-        // setSelectedPriceRange([minPrice, maxPrice]);
-        
+    const handleRange = (e) => {
+        setSelectedPriceRange({min : e.target.min,max : e.target.max});
+        console.log(selectedPriceRange);
+    }
+    const handleChangeCheck = (event) => {
+      
+        const value = event.target.value
+        if (event.target.checked) {
+            setProductFilter([...productFilter, value]);
+        }
+        else {
+            setProductFilter(productFilter.filter((item) => item !== value));
+        }
+       
 
     };
-    const handleFilter = () => {
-        // const filteredProducts = products.filter((product) =>
-        // (searchTerm === '' || product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        //     (category.length === 0 || category.includes(product.category)) &&
-        //     product.price >= selectedPriceRange[0] &&
-        //     product.price <= selectedPriceRange[1])
 
-        // );
-        console.log(productFilter)
-        console.log(searchTerm);
-        if(searchTerm === ''){
+    const handleFilter = () => {
+        
+       
+        if (searchTerm === '' && productFilter.length > 0) {
             const filteredProducts = products.filter((product) =>
             (
-                
-                product.category == 'women'
+
+                productFilter.includes(product.category)
             )
+
+            );
+            setEnableSearch(true);
+            setResults(filteredProducts);
+        } else if (searchTerm && productFilter.length === 0) {
+            const filteredProducts = products.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
+            console.log(filteredProducts)
+            setEnableSearch(true);
+            setResults(filteredProducts);
+        }else{
+            console.log('when both')
             
-      );
-       setEnableSearch(true);
-        setResults(filteredProducts);
+            const filteredProducts = products.filter((product) =>
+            (
+
+                productFilter.includes(product.category)
+            )
+
+            );
+            const newFilteredProducts = filteredProducts.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
+            setEnableSearch(true);
+            if(newFilteredProducts.length === 0) {
+                setResults([]);
+            }
+            setResults(newFilteredProducts);
         }
+
         
-    // const filteredProducts = products.filter(
-    //     (product) =>
-    //       (category.length === 0 || category.includes(product.category)) &&
-    //       (searchTerm === "" || product.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    //       product.price >= selectedPriceRange[0] &&
-    //       product.price <= selectedPriceRange[1]
-    //   );
-        // console.log(filteredProducts)
-        
+
     }
 
     const addOrders = () => {
         setLoadingOrders(true);
-        setTimeout(async()=>{
+        setTimeout(async () => {
             const orderData = cart.map((item) => ({
-                productId : item.id,
-                name : item.name,
-                price : item.price,
-                qty : item.qty
+                productId: item.id,
+                name: item.name,
+                price: item.price,
+                qty: item.qty,
+                orderedAt: new Date().toUTCString().slice(5, 16),
+                total: total
+
             }));
-            
-            const docRef = await addDoc(collection(db,`/userOrders/${uid}/orders`),{
-                orderedAt : new Date(),
-                items : orderData,
-                total : total
+            orderData.map(async(order) => {
+                const docRef = await addDoc(collection(db, `/userOrders/${uid}/orders`), order)
             })
-            cart.map((c) => {
-                removeFromCart(c);
+            
+            
+            
+            cart.map(async (c) => {
+                await deleteDoc(doc(db, `/usersCarts/${uid}/myCart`, c.id));
             })
             setCart([]);
             toast.success('Order placed successfully');
 
             setLoadingOrders(false)
             navigate(`/userOrders/${uid}/orders`);
-            // const docRef = await addDoc(collection(db, `/userOrders/${uid}/orders`),
-        },1000)
 
+        }, 1000)
+
+    }
+    const getOrders = () => {
+        const unsub = onSnapshot(collection(db, `/userOrders/${uid}/orders`), (snapshot) => {
+            const orders = snapshot.docs.map((doc) => {
+                return {
+                    ...doc.data()
+
+                }
+
+            });
+
+            console.log(orders)
+            
+            setOrders(orders);
+            
+
+
+
+        });
     }
     const getCart = () => {
         const unsub = onSnapshot(collection(db, `/usersCarts/${uid}/myCart`), (snapshot) => {
@@ -187,10 +207,10 @@ export const ProductProvider = ({ children, uid }) => {
         setTimeout(async () => {
             await deleteDoc(doc(db, `/usersCarts/${uid}/myCart`, product.id));
             setLoadingProduct((prevState) => ({ ...prevState, [product.id]: false }));
-            if(!loadingOrders){
-                toast.success('Product removed successfully');
-            }
-            
+
+            toast.success('Product removed successfully');
+
+
         }, 2000)
 
 
@@ -222,16 +242,17 @@ export const ProductProvider = ({ children, uid }) => {
     const cartTotal = () => {
         let newTotal = 0
         cart.map((c) => {
-            newTotal += (c.price * c.qty);
+            newTotal += (Number(c.price) * c.qty);
         })
         setTotal(newTotal);
 
     }
-    const handleChange = () => {
+    const handleChange = (e) => {
+        setSearchTerm(e.target.value);
 
     }
 
-    return (<productContext.Provider value={{handleChange,loadingOrders,addOrders, checkbox,searchTerm, selectedPriceRange, handleChangeCheck, category, setResults, setEnableSearch, enableSearch, results, handleFilter, total, cartTotal, decQty, addQty, removeFromCart, loadingProduct, setLoadingProduct, getCart, navigate, getProducts, products, range, setRange, addProducts, addToCart, cart }}>
+    return (<productContext.Provider value={{orders,getOrders,handleRange, productFilter, orders, handleChange, loadingOrders, addOrders, checkbox, searchTerm, selectedPriceRange, handleChangeCheck, category, setResults, setEnableSearch, enableSearch, results, handleFilter, total, cartTotal, decQty, addQty, removeFromCart, loadingProduct, setLoadingProduct, getCart, navigate, getProducts, products, range, setRange, addProducts, addToCart, cart }}>
         {children}
 
     </productContext.Provider>)

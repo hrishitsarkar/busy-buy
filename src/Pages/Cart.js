@@ -20,6 +20,7 @@ const Cart = () => {
     },[])
     
     const {cart,getCart,cartTotal,total,addOrders,loadingOrders} = useProductValue();
+    
     useEffect(()=>{
         cartTotal();
     },[cart])
@@ -31,7 +32,7 @@ const Cart = () => {
     {cart.length === 0 ? <div className="w-full h-full  flex flex-col items-center justify-center"><h1 className="font-bold text-[2rem] m-5 ">Your cart is empty</h1><img className="rounded-lg m-5 "  src={empty}/></div> : cart.map((c, i) => (<ProductCard product={c} key={i} />))}
     
     </div>
-    <div className="w-[30%] flex flex-col items-left p-5">
+    <div className={cart.length === 0 ? "w-[30%] flex flex-col items-left p-5 hidden" :"w-[30%] flex flex-col items-left p-5" }>
         <h1 className="font-bold text-slate-500 border-b-[1px] m-5">Price Details</h1>
         <div className="w-full flex flex-row items-center m-5">
         <h1 className="font-bold w-[50%]">Price ({cart.length} items)</h1>
