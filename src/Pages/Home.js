@@ -13,7 +13,7 @@ const Home = () => {
         setLoading(true);
         setPageToggler('home')
         setTimeout(() => {
-           
+                
                 getProducts();
 
             
@@ -28,20 +28,22 @@ const Home = () => {
         
         
         
-      }, [productFilter,searchTerm]);
+      }, [productFilter,searchTerm,selectedPriceRange]);
     useEffect(()=>{
         if(results.length === 0){
             setEnableSearch(false)
         }
     },[results])
-    
+    useEffect(()=>{
+        console.log(results)
+    },[results])
     return (<>
         {loading ? <div className="flex items-center justify-center fixed top-0 left-0 w-full h-full"><SyncLoader color="#060606" /></div> :
             <div className="w-full flex flex-row p-5 ">
                 <div className="w-[20%] flex flex-col items-center bg-gray-100 h-full ">
                     <h1 className="font-bold m-5 text-[2rem]">Filters</h1>
                     <h1 className="font-bold m-5">Price : {range} </h1>
-                    <input className="m-5 w-[80%]"  type="range" min={1} max={100000} step={1} value={range} onChange={handleRange} />
+                    <input className="m-5 w-[80%]"  type="range" min={1} max={100000} step={1} value={selectedPriceRange} onChange={handleRange} />
                     <h1 className="font-bold m-5 text-[1.5rem] text-violet-700">Category</h1>
                     <div className="flex flex-col items-left p-2 flex-wrap">
 

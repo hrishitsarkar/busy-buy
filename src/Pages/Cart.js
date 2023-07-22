@@ -8,7 +8,7 @@ import tick from './tick.png'
 const Cart = () => {
     
     const {setLoading,loading,setPageToggler} = useUserValue();
-    
+    const {cart,getCart,cartTotal,total,addOrders,loadingOrders} = useProductValue();
     useEffect(()=>{
         setPageToggler("cart");
         setLoading(true);
@@ -19,7 +19,7 @@ const Cart = () => {
         },1000)
     },[])
     
-    const {cart,getCart,cartTotal,total,addOrders,loadingOrders} = useProductValue();
+    
     
     useEffect(()=>{
         cartTotal();

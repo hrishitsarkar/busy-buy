@@ -18,8 +18,8 @@ export const ProductProvider = ({ children, uid }) => {
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
     const navigate = useNavigate();
-    const [range, setRange] = useState()
-    const [selectedPriceRange, setSelectedPriceRange] = useState({min : 0,max : 0});
+    const [range, setRange] = useState(7500)
+    const [selectedPriceRange, setSelectedPriceRange] = useState([0,100000]);
     const [total, setTotal] = useState(0);
     const [category, setCategory] = useState([])
     const [results, setResults] = useState([]);
@@ -27,12 +27,15 @@ export const ProductProvider = ({ children, uid }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [productFilter, setProductFilter] = useState([]);
     const [orders, setOrders] = useState([]);
+    console.log(products)
     const checkbox = (e) => {
 
     }
     const handleRange = (e) => {
-        setSelectedPriceRange({min : e.target.min,max : e.target.max});
-        console.log(selectedPriceRange);
+        
+        setRange(e.target.value);
+        setSelectedPriceRange(e.target.value);
+        
     }
     const handleChangeCheck = (event) => {
       
@@ -49,39 +52,45 @@ export const ProductProvider = ({ children, uid }) => {
 
     const handleFilter = () => {
         
+        const [minPrice,maxPrice] = selectedPriceRange;
+        
        
-        if (searchTerm === '' && productFilter.length > 0) {
-            const filteredProducts = products.filter((product) =>
-            (
+       const priceFilterProducts = products.filter((product) =>   product.price >= minPrice && product.price  <= maxPrice) 
+       setResults(priceFilterProducts);
+       setEnableSearch(true)
+       console.log(results)
+        // if (searchTerm === '' && productFilter.length > 0) {
+        //     const filteredProducts = products.filter((product) =>
+        //     (
 
-                productFilter.includes(product.category)
-            )
+        //         productFilter.includes(product.category)
+        //     )
 
-            );
-            setEnableSearch(true);
-            setResults(filteredProducts);
-        } else if (searchTerm && productFilter.length === 0) {
-            const filteredProducts = products.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
-            console.log(filteredProducts)
-            setEnableSearch(true);
-            setResults(filteredProducts);
-        }else{
-            console.log('when both')
+        //     );
+        //     setEnableSearch(true);
+        //     setResults(filteredProducts);
+        // } else if (searchTerm && productFilter.length === 0) {
+        //     const filteredProducts = products.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
+        //     console.log(filteredProducts)
+        //     setEnableSearch(true);
+        //     setResults(filteredProducts);
+        // }else{
+        //     console.log('when both')
             
-            const filteredProducts = products.filter((product) =>
-            (
+        //     const filteredProducts = products.filter((product) =>
+        //     (
 
-                productFilter.includes(product.category)
-            )
+        //         productFilter.includes(product.category)
+        //     )
 
-            );
-            const newFilteredProducts = filteredProducts.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
-            setEnableSearch(true);
-            if(newFilteredProducts.length === 0) {
-                setResults([]);
-            }
-            setResults(newFilteredProducts);
-        }
+        //     );
+        //     const newFilteredProducts = filteredProducts.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
+        //     setEnableSearch(true);
+        //     if(newFilteredProducts.length === 0) {
+        //         setResults([]);
+        //     }
+        //     setResults(newFilteredProducts);
+        // }
 
         
 
@@ -91,17 +100,19 @@ export const ProductProvider = ({ children, uid }) => {
         setLoadingOrders(true);
         setTimeout(async () => {
             const orderData = cart.map((item) => ({
+                url : item.url,
                 productId: item.id,
                 name: item.name,
                 price: item.price,
-                qty: item.qty,
+                qty: item.qty
+            }));
+            const newOrder = {
+                items : orderData,
                 orderedAt: new Date().toUTCString().slice(5, 16),
                 total: total
-
-            }));
-            orderData.map(async(order) => {
-                const docRef = await addDoc(collection(db, `/userOrders/${uid}/orders`), order)
-            })
+            }
+                const docRef = await addDoc(collection(db, `/userOrders/${uid}/orders`),newOrder )
+            
             
             
             
@@ -126,7 +137,7 @@ export const ProductProvider = ({ children, uid }) => {
                 }
 
             });
-
+            
             console.log(orders)
             
             setOrders(orders);
