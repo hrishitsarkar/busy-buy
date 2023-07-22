@@ -10,6 +10,7 @@ import { UserProvider } from './userContext';
 import { ToastContainer } from 'react-toastify';
 import { useState } from 'react';
 import Cart from './Pages/Cart';
+import Order from './Pages/Order';
 function App() {
   const [uid,setUid] = useState('');
   return (
@@ -23,7 +24,7 @@ function App() {
               <Route path='/sign-in' element = {<SignIn />} />
               <Route path='/sign-up' element = {<Register />} />
               <Route path={`/userCarts/${uid}/myCart`} element = {<Cart />} />
-              
+              <Route path={`/userOrders/${uid}/orders`} element = {<Order />} />
             </Routes>
             </ProductProvider>
         </UserProvider>

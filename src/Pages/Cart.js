@@ -19,7 +19,7 @@ const Cart = () => {
         },1000)
     },[])
     
-    const {cart,getCart,cartTotal,total} = useProductValue();
+    const {cart,getCart,cartTotal,total,addOrders,loadingOrders} = useProductValue();
     useEffect(()=>{
         cartTotal();
     },[cart])
@@ -48,7 +48,7 @@ const Cart = () => {
         <h1 className="font-bold w-[50%] text-indigo-900">&#8377;{total}</h1>
         </div>
         <div className="flex w-full justify-center items-center border-b-[2px]">
-        <button className="m-5 bg-orange-400 text-white w-[180px] h-[40px] font-bold hover:bg-rose-700 shadow-2xl">Place Order</button>
+        <button className="m-5 bg-orange-400 text-white w-[180px] h-[40px] font-bold hover:bg-rose-700 shadow-2xl" onClick={addOrders}>{loadingOrders ? 'Purchasing' : 'Place Order' }</button>
         </div>
         <div className="flex flex-row items-center p-5">
         <img 

@@ -12,7 +12,9 @@ export const useProductValue = () => {
 }
 
 export const ProductProvider = ({ children, uid }) => {
+
     const [loadingProduct, setLoadingProduct] = useState({});
+    const [loadingOrders,setLoadingOrders] = useState(false);
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
     const navigate = useNavigate();
@@ -23,30 +25,34 @@ export const ProductProvider = ({ children, uid }) => {
     const [results, setResults] = useState([]);
     const [enableSearch, setEnableSearch] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [productFilter,setProductFilter] = useState('men');
     const checkbox = (e) => {
         
     }
-    const handleChange = (e) => {
-        setSearchTerm(e.target.value);
-        console.log(searchTerm);
-        const recentCategory = e.target.value;
-        if (e.target.checked) {
-            setCategory((prevState) => {
-                const filtered = [...prevState, recentCategory]
-                return filtered;
-            });
+    const handleChangeCheck = (e) => {
+        // setSearchTerm(e.target.value);
+        // console.log(searchTerm);
+        console.log('val :' ,e.target.value)
+        setProductFilter(e.target.value);
+        console.log('productFilter',productFilter)
+        // const recentCategory = e.target.value;
+        // if (e.target.checked) {
+        //     setCategory((prevState) => {
+        //         const filtered = [...prevState, recentCategory]
+        //         return filtered;
+        //     });
 
-        } else {
-            setCategory((prevState) => {
-                const filtered = prevState.filter((selected) => selected !== recentCategory)
-                return filtered
+        // } else {
+        //     setCategory((prevState) => {
+        //         const filtered = prevState.filter((selected) => selected !== recentCategory)
+        //         return filtered
 
-            })
-        }
+        //     })
+        // }
 
-        const minPrice = parseInt(e.target.value[0]);
-        const maxPrice = parseInt(e.target.value[1]);
-        setSelectedPriceRange([minPrice, maxPrice]);
+        // const minPrice = parseInt(e.target.value[0]);
+        // const maxPrice = parseInt(e.target.value[1]);
+        // setSelectedPriceRange([minPrice, maxPrice]);
         
 
     };
@@ -58,22 +64,58 @@ export const ProductProvider = ({ children, uid }) => {
         //     product.price <= selectedPriceRange[1])
 
         // );
-    //     const filteredProducts = products.filter((product) =>
-    //       category.includes(product.category) || product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
-    const filteredProducts = products.filter(
-        (product) =>
-          (category.length === 0 || category.includes(product.category)) &&
-          (searchTerm === "" || product.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
-          product.price >= selectedPriceRange[0] &&
-          product.price <= selectedPriceRange[1]
+        console.log(productFilter)
+        console.log(searchTerm);
+        if(searchTerm === ''){
+            const filteredProducts = products.filter((product) =>
+            (
+                
+                product.category == 'women'
+            )
+            
       );
-        console.log(filteredProducts)
-        setEnableSearch(true);
+       setEnableSearch(true);
         setResults(filteredProducts);
+        }
+        
+    // const filteredProducts = products.filter(
+    //     (product) =>
+    //       (category.length === 0 || category.includes(product.category)) &&
+    //       (searchTerm === "" || product.name.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    //       product.price >= selectedPriceRange[0] &&
+    //       product.price <= selectedPriceRange[1]
+    //   );
+        // console.log(filteredProducts)
+        
     }
 
+    const addOrders = () => {
+        setLoadingOrders(true);
+        setTimeout(async()=>{
+            const orderData = cart.map((item) => ({
+                productId : item.id,
+                name : item.name,
+                price : item.price,
+                qty : item.qty
+            }));
+            
+            const docRef = await addDoc(collection(db,`/userOrders/${uid}/orders`),{
+                orderedAt : new Date(),
+                items : orderData,
+                total : total
+            })
+            cart.map((c) => {
+                removeFromCart(c);
+            })
+            setCart([]);
+            toast.success('Order placed successfully');
 
+            setLoadingOrders(false)
+            navigate(`/userOrders/${uid}/orders`);
+            // const docRef = await addDoc(collection(db, `/userOrders/${uid}/orders`),
+        },1000)
+
+    }
     const getCart = () => {
         const unsub = onSnapshot(collection(db, `/usersCarts/${uid}/myCart`), (snapshot) => {
             const cart = snapshot.docs.map((doc) => {
@@ -145,7 +187,10 @@ export const ProductProvider = ({ children, uid }) => {
         setTimeout(async () => {
             await deleteDoc(doc(db, `/usersCarts/${uid}/myCart`, product.id));
             setLoadingProduct((prevState) => ({ ...prevState, [product.id]: false }));
-            toast.success('Product removed successfully');
+            if(!loadingOrders){
+                toast.success('Product removed successfully');
+            }
+            
         }, 2000)
 
 
@@ -182,8 +227,11 @@ export const ProductProvider = ({ children, uid }) => {
         setTotal(newTotal);
 
     }
+    const handleChange = () => {
 
-    return (<productContext.Provider value={{ checkbox,searchTerm, selectedPriceRange, handleChange, category, setResults, setEnableSearch, enableSearch, results, handleFilter, total, cartTotal, decQty, addQty, removeFromCart, loadingProduct, setLoadingProduct, getCart, navigate, getProducts, products, range, setRange, addProducts, addToCart, cart }}>
+    }
+
+    return (<productContext.Provider value={{handleChange,loadingOrders,addOrders, checkbox,searchTerm, selectedPriceRange, handleChangeCheck, category, setResults, setEnableSearch, enableSearch, results, handleFilter, total, cartTotal, decQty, addQty, removeFromCart, loadingProduct, setLoadingProduct, getCart, navigate, getProducts, products, range, setRange, addProducts, addToCart, cart }}>
         {children}
 
     </productContext.Provider>)

@@ -38,10 +38,11 @@ const Navbar = () => {
                         className='w-full outline-0 p-2 bg-inherit rounded-lg'
                     />
                 </div>
-                <div className={isLoggedIn ? 'flex flex-row items-center p-2 hover:bg-zinc-950 hover:text-white rounded-lg' : 'flex flex-row items-center p-2 hover:bg-zinc-950 hover:text-white rounded-lg hidden'}>
+                <Link to={`/userOrders/${uid}/orders`}><div className={isLoggedIn ? 'flex flex-row items-center p-2 hover:bg-zinc-950 hover:text-white rounded-lg' : 'flex flex-row items-center p-2 hover:bg-zinc-950 hover:text-white rounded-lg hidden'}>
                     <span className='m-1'><i className="fa-solid fa-box"></i></span>
                     <button className='m-1' >Orders</button>
                 </div>
+                </Link>
                 <Link to='/sign-in'>
                     {!isLoggedIn ? <div id='sign-in'
                         className='flex flex-row items-center hover:bg-indigo-700 hover:text-white p-2 rounded-lg'>

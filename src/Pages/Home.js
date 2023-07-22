@@ -7,8 +7,8 @@ import ProductCard from "../Components/ProductCard";
 
 const Home = () => {
     const { loading, setLoading, setPageToggler } = useUserValue();
-    const { checkBox,searchTerm,selectedPriceRange,handleChange,setEnableSearch,category,setResults,enableSearch, results, getProducts, products, range, setRange, addProducts, handleFilter } = useProductValue();
-    console.log(results)
+    const { checkBox,searchTerm,selectedPriceRange,handleChangeCheck,handleChange,setEnableSearch,category,setResults,enableSearch, results, getProducts, products, range, setRange, addProducts, handleFilter } = useProductValue();
+    console.log('res',results)
     useEffect(() => {
         setLoading(true);
         setPageToggler('home')
@@ -45,10 +45,10 @@ const Home = () => {
                     <h1 className="font-bold m-5 text-[1.5rem] text-violet-700">Category</h1>
                     <div className="flex flex-col items-left p-2 flex-wrap">
 
-                        <span className="flex flex-row items-center"><input type="checkbox" value='men' className="m-2" onChange={handleChange} /> <p>Mens Clothing</p></span>
-                        <span className="flex flex-row items-center"><input type="checkbox" value='women' className="m-2" onChange={handleChange} /><p>Womens Clothing</p></span>
-                        <span className="flex flex-row items-center"><input type="checkbox" value='electronic' className="m-2" onChange={handleChange} /><p>Electronics</p></span>
-                        <span className="flex flex-row items-center"><input type="checkbox" value='book' className="m-2" onChange={handleChange} /><p>Books</p></span>
+                        <span className="flex flex-row items-center"><input type="checkbox" value='men' className="m-2" onChange={handleChangeCheck} /> <p>Mens Clothing</p></span>
+                        <span className="flex flex-row items-center"><input type="checkbox" value='women' className="m-2" onChange={handleChangeCheck} /><p>Womens Clothing</p></span>
+                        <span className="flex flex-row items-center"><input type="checkbox" value='electronic' className="m-2" onChange={handleChangeCheck} /><p>Electronics</p></span>
+                        <span className="flex flex-row items-center"><input type="checkbox" value='book' className="m-2" onChange={handleChangeCheck} /><p>Books</p></span>
                     </div>
 
 
