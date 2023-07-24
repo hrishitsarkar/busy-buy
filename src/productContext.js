@@ -27,12 +27,13 @@ export const ProductProvider = ({ children, uid }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [productFilter, setProductFilter] = useState([]);
     const [orders, setOrders] = useState([]);
-    console.log(products)
+    const [rangeToggler,setRangeToggler] = useState(false);
+    
     const checkbox = (e) => {
 
     }
     const handleRange = (e) => {
-        
+        setRangeToggler(true);
         setRange(e.target.value);
         setSelectedPriceRange(e.target.value);
         
@@ -52,14 +53,97 @@ export const ProductProvider = ({ children, uid }) => {
 
     const handleFilter = () => {
         
-        const [minPrice,maxPrice] = selectedPriceRange;
+       let filteredProducts = [];
+        if(rangeToggler){
+            filteredProducts = products.filter((product) => product.price <= Number(selectedPriceRange))
+            setResults(filteredProducts);
+            if (searchTerm === '' && productFilter.length > 0) {
+            
+                const filteredProducts = results.filter((product) =>
+                (
+    
+                    productFilter.includes(product.category)
+                )
+    
+                );
+                setEnableSearch(true);
+                setResults(filteredProducts);
+            }
+            
+             else if (searchTerm && productFilter.length === 0) {
+                const filteredProducts = results.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
+                console.log('$$$',filteredProducts)
+                // if(filteredProducts.length === 0){
+                //     setEnableSearch(false);
+                // }
+                
+                setResults(filteredProducts);
+            }else if(searchTerm && productFilter.length > 0){
+                console.log('when both')
+                
+                const filteredProducts = results.filter((product) =>
+                (
+    
+                    productFilter.includes(product.category)
+                )
+    
+                );
+                const newFilteredProducts = filteredProducts.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
+                setEnableSearch(true);
+                if(newFilteredProducts.length === 0) {
+                    setResults([]);
+                }
+                setEnableSearch(true);
+                setResults(newFilteredProducts)
+            } 
+        }
+        else{
+            if (searchTerm === '' && productFilter.length > 0) {
+            
+                    const filteredProducts = products.filter((product) =>
+                    (
         
-       
-       const priceFilterProducts = products.filter((product) =>   product.price >= minPrice && product.price  <= maxPrice) 
-       setResults(priceFilterProducts);
-       setEnableSearch(true)
-       console.log(results)
+                        productFilter.includes(product.category)
+                    )
+        
+                    );
+                    setEnableSearch(true);
+                    setResults(filteredProducts);
+                }
+                
+                 else if (searchTerm && productFilter.length === 0) {
+                    const filteredProducts = products.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
+                    console.log('$$$',filteredProducts)
+                    // if(filteredProducts.length === 0){
+                    //     setEnableSearch(false);
+                    // }
+                    
+                    setResults(filteredProducts);
+                }else if(searchTerm && productFilter.length > 0){
+                    console.log('when both')
+                    
+                    const filteredProducts = products.filter((product) =>
+                    (
+        
+                        productFilter.includes(product.category)
+                    )
+        
+                    );
+                    const newFilteredProducts = filteredProducts.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
+                    setEnableSearch(true);
+                    if(newFilteredProducts.length === 0) {
+                        setResults([]);
+                    }
+                    setEnableSearch(true);
+                    setResults(newFilteredProducts)
+                } 
+        }
+        setEnableSearch(true);
+        
+        
+        
         // if (searchTerm === '' && productFilter.length > 0) {
+            
         //     const filteredProducts = products.filter((product) =>
         //     (
 
@@ -69,12 +153,17 @@ export const ProductProvider = ({ children, uid }) => {
         //     );
         //     setEnableSearch(true);
         //     setResults(filteredProducts);
-        // } else if (searchTerm && productFilter.length === 0) {
+        // }
+        
+        //  else if (searchTerm && productFilter.length === 0) {
         //     const filteredProducts = products.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
-        //     console.log(filteredProducts)
-        //     setEnableSearch(true);
+        //     console.log('$$$',filteredProducts)
+        //     if(filteredProducts.length === 0){
+        //         setEnableSearch(false);
+        //     }
+            
         //     setResults(filteredProducts);
-        // }else{
+        // }else if(searchTerm && productFilter.length > 0){
         //     console.log('when both')
             
         //     const filteredProducts = products.filter((product) =>
@@ -89,12 +178,58 @@ export const ProductProvider = ({ children, uid }) => {
         //     if(newFilteredProducts.length === 0) {
         //         setResults([]);
         //     }
-        //     setResults(newFilteredProducts);
-        // }
-
+        //     setEnableSearch(true);
+        //     setResults(newFilteredProducts)
+        // } 
         
-
+    
+        // if(selectedPriceRange){
+        //     console.log('inside price range',selectedPriceRange)
+        //     const newFilter =  products.filter((product) => (product.price <= Number(selectedPriceRange)));
+        //     console.log('####',newFilter);
+        //     setEnableSearch(true);
+        //     setResults(newFilter);
+        // }
     }
+
+    // const handleFilter = () => {
+    //     // Initialize a variable to hold the filtered products
+    //     let filteredProducts = [];
+        
+    //     // Filter by selectedPriceRange
+    //     if (selectedPriceRange) {
+    //         console.log('inside price range', selectedPriceRange);
+    //         filteredProducts = products.filter((product) => product.price <= Number(selectedPriceRange));
+    //     }
+    
+    //     // Filter by productFilter
+    //     if (productFilter.length > 0) {
+    //         filteredProducts = products.filter((product) =>
+    //             productFilter.includes(product.category) &&
+    //             product.price <= selectedPriceRange
+    //         );
+    //     }
+    
+    //     // Filter by searchTerm
+    //     if (searchTerm) {
+    //         const searchResults = products.filter((product) =>
+    //             product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    //         );
+    
+    //         if (searchResults.length === 0) {
+    //             setEnableSearch(false);
+    //             setResults([]);
+    //         } else {
+    //             filteredProducts = searchResults;
+    //             setEnableSearch(true);
+    //         }
+    //     }
+    
+    //     // Update the results state with the filtered products
+    //     setResults(filteredProducts);
+    //     setEnableSearch(true);
+    // };
+    
 
     const addOrders = () => {
         setLoadingOrders(true);
@@ -170,7 +305,7 @@ export const ProductProvider = ({ children, uid }) => {
                 }
 
             });
-
+            
             setProducts(products);
         });
 

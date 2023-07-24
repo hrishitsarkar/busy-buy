@@ -8,14 +8,14 @@ import ProductCard from "../Components/ProductCard";
 const Home = () => {
     const { loading, setLoading, setPageToggler } = useUserValue();
     const {handleRange, productFilter,checkBox,searchTerm,selectedPriceRange,handleChangeCheck,handleChange,setEnableSearch,category,setResults,enableSearch, results, getProducts, products, range, setRange, addProducts, handleFilter } = useProductValue();
-    console.log('res',results)
+    console.log('res',results.length)
     useEffect(() => {
         setLoading(true);
         setPageToggler('home')
         setTimeout(() => {
                 
                 getProducts();
-
+                setEnableSearch(false)
             
             setLoading(false);
         }, 1000)
@@ -29,15 +29,17 @@ const Home = () => {
         
         
       }, [productFilter,searchTerm,selectedPriceRange]);
-    useEffect(()=>{
-        if(results.length === 0){
-            setEnableSearch(false)
+      useEffect(()=>{
+        if(selectedPriceRange){
+            setEnableSearch(true)
         }
-    },[results])
+    },[selectedPriceRange])
     useEffect(()=>{
-        console.log(results)
+        console.log('results : ',results)
     },[results])
-    return (<>
+
+    return (
+    <>
         {loading ? <div className="flex items-center justify-center fixed top-0 left-0 w-full h-full"><SyncLoader color="#060606" /></div> :
             <div className="w-full flex flex-row p-5 ">
                 <div className="w-[20%] flex flex-col items-center bg-gray-100 h-full ">
@@ -56,10 +58,11 @@ const Home = () => {
 
                 </div>
                 <div className="w-[80%] flex flex-row flex-wrap items-center justify-around">
-                    {enableSearch ? results.map((product, i) => (<ProductCard product={product} key={i} />)) : products.map((product, i) => (<ProductCard product={product} key={i} />))}
+                {enableSearch ? results.map((product, i) => (<ProductCard product={product} key={i} />)) : products.map((product, i) => (<ProductCard product={product} key={i} />)) }
+
+                    
 
                 </div>
-            </div>}
-    </>)
-}
+            </div>}</>)}
+
 export default Home;

@@ -14,11 +14,12 @@ const Order = () => {
     {orders.map((order) => (<>
         <div className="w-full flex flex-col items-center border-8 p-2 m-5">
         {order.items.map((o) => (<div className="h-[100px] flex flex-row items-center justify-between  w-full m-5">
-            <img src={o.url} className="w-[100px] h-[120px] "/>
-            <h1 className="">{o.name}</h1>
-            <h1 className="">&#8377;{o.price}</h1>
-            <h1 className="">x{o.qty}</h1>
-            <h1 className="">Total price : &#8377;{o.price * o.qty}</h1>
+            
+            <div className="w-[6%] flex items-center"><img src={o.url} className="w-[100%] h-[120px] "/></div>
+            <div className="flex w-[20%] items-start overflow-hidden"><h1 className="">{o.name}</h1></div>
+            <div className="flex w-[20%] items-start overflow-hidden"><h1 className="">&#8377;{o.price}</h1></div>
+            <div className="flex w-[20%] items-start overflow-hidden"><h1 className="">x{o.qty}</h1></div>
+            <div className="flex w-[20%] items-start overflow-hidden"><h1 className="">Total price : &#8377;{o.price * o.qty}</h1></div>
             </div>
         ))}
         
