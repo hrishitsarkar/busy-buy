@@ -22,6 +22,7 @@ const Home = () => {
 
 
     }, [])
+    
     useEffect(() => {
         
         handleFilter();
@@ -29,14 +30,11 @@ const Home = () => {
         
         
       }, [productFilter,searchTerm,selectedPriceRange]);
-      useEffect(()=>{
-        if(selectedPriceRange){
-            setEnableSearch(true)
-        }
-    },[selectedPriceRange])
+     
     useEffect(()=>{
         console.log('results : ',results)
     },[results])
+    
 
     return (
     <>
