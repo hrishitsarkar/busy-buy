@@ -2,21 +2,24 @@ import { createContext, useContext, useState } from "react";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
+//creating user context
 export const userContext = createContext();
-
+//creating a custom hook to get the value
 export const useUserValue = () => {
     const value = useContext(userContext);
     return value;
 }
-
-export const UserProvider = ({ children,uid,setUid }) => {
-
+//creating user provider
+export const UserProvider = ({ children, uid, setUid }) => {
+    //if a user looged in or not
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [loading,setLoading] = useState(false);
-    const [pageToggler,setPageToggler] = useState("home");
-    
+    //to show spinner whenever required
+    const [loading, setLoading] = useState(false);
+    //to toggle the pages
+    const [pageToggler, setPageToggler] = useState("home");
+    //useNavigate hook
     const navigate = useNavigate();
+    //function to sign out user
     const signOutUser = () => {
         setLoading(true);
         const auth = getAuth();
@@ -34,27 +37,28 @@ export const UserProvider = ({ children,uid,setUid }) => {
             // An error happened.
         });
     }
+    //funtion to create a user
     const createUser = (email, password) => {
-        
+
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
 
                 // Signed in 
                 const user = userCredential.user;
-                
+
                 toast.success('Account created successfully');
-                
+
                 setTimeout(() => {
-                    
+
                     navigate('/sign-in');
 
-                    
-                    
-                    
+
+
+
                 }, 1000)
-                
-                
+
+
 
 
                 // ...
@@ -69,7 +73,7 @@ export const UserProvider = ({ children,uid,setUid }) => {
                 // ..
             });
     }
-
+    //funtion to sign in an existing user
     const signInUser = (email, password) => {
 
         const auth = getAuth();
@@ -81,7 +85,7 @@ export const UserProvider = ({ children,uid,setUid }) => {
                 setUid(user.uid);
                 toast.success('Log in successful');
                 setTimeout(() => {
-                    
+
                     navigate('/');
                 }, 1000);
 
@@ -101,7 +105,7 @@ export const UserProvider = ({ children,uid,setUid }) => {
 
     }
 
-    return (<userContext.Provider value={{pageToggler,setPageToggler,uid,loading,setLoading, createUser, signInUser, isLoggedIn, setIsLoggedIn, signOutUser }}>
+    return (<userContext.Provider value={{ pageToggler, setPageToggler, uid, loading, setLoading, createUser, signInUser, isLoggedIn, setIsLoggedIn, signOutUser }}>
         {children}
 
     </userContext.Provider>)

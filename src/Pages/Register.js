@@ -1,35 +1,39 @@
 import { useEffect, useRef } from 'react';
-import { useProductValue } from '../productContext';
+
 import signUp from './sign-up.jpg'
 import { Link } from 'react-router-dom';
-import { auth } from '../firebaseInIt';
+
 import { useUserValue } from '../userContext';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+
 
 
 const Register = () => {
+    //getting ref of name,email,password field
     const nameRef = useRef();
     const emailRef = useRef();
     const passwordRef = useRef();
+    //destructuring from user context
+    const { createUser, loading, setLoading, setPageToggler } = useUserValue();
 
-    const { createUser ,loading,setLoading ,setPageToggler} = useUserValue();
-    const navigate = useNavigate();
+    //toggling page to signup
     useEffect(() => {
         setPageToggler('signup');
     })
-
+    //function to sign up a user
     const signUpHandler = () => {
         setLoading(true);
+        //getting the values of name,email,password
         const name = nameRef.current.value;
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
 
-
+        //checking for password
         if (password.length < 6) {
             toast.error('Password should be at least 6 characters');
             return;
         }
+        //creating a user
         createUser(email, password);
 
 
@@ -44,7 +48,7 @@ const Register = () => {
                 src={signUp} />
             <h1 className='m-2 font-bold text-[2rem]'>Looks like you are new here! Sign up to get started</h1>
         </div>
-        <div  className='w-[50%] flex flex-col items-center justify-around'>
+        <div className='w-[50%] flex flex-col items-center justify-around'>
             <input type='text' ref={nameRef} required className='outline-0 w-[50%] m-5 p-2 border-b-[3px]' placeholder='Enter Name' />
             <input type='email' pattern="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" ref={emailRef} required className='outline-0 w-[50%] m-5 p-2 border-b-[3px]' placeholder='Enter Email' />
             <input type='password' ref={passwordRef} required className=' outline-0 w-[50%] m-5 p-2 border-b-[3px]' placeholder='Enter Password' />
