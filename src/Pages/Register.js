@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useProductValue } from '../productContext';
 import signUp from './sign-up.jpg'
 import { Link } from 'react-router-dom';
@@ -13,9 +13,11 @@ const Register = () => {
     const emailRef = useRef();
     const passwordRef = useRef();
 
-    const { createUser ,loading,setLoading } = useUserValue();
+    const { createUser ,loading,setLoading ,setPageToggler} = useUserValue();
     const navigate = useNavigate();
-
+    useEffect(() => {
+        setPageToggler('signup');
+    })
 
     const signUpHandler = () => {
         setLoading(true);

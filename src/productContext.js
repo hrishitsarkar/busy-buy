@@ -18,8 +18,8 @@ export const ProductProvider = ({ children, uid }) => {
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
     const navigate = useNavigate();
-    const [range, setRange] = useState(7500)
-    const [selectedPriceRange, setSelectedPriceRange] = useState([0,100000]);
+    const [range, setRange] = useState(25000)
+    const [selectedPriceRange, setSelectedPriceRange] = useState(100000);
     const [total, setTotal] = useState(0);
     const [category, setCategory] = useState([])
     const [results, setResults] = useState([]);
@@ -35,7 +35,7 @@ export const ProductProvider = ({ children, uid }) => {
     const handleRange = (e) => {
         setRangeToggler(true);
         setRange(e.target.value);
-        setSelectedPriceRange(e.target.value);
+       setSelectedPriceRange(e.target.value)
         
     }
     const handleChangeCheck = (event) => {
@@ -51,112 +51,22 @@ export const ProductProvider = ({ children, uid }) => {
 
     };
 
-    // const handleFilter = () => {
-        
-    //    let filteredProducts = [];
-    //     if(rangeToggler){
-    //         filteredProducts = products.filter((product) => product.price <= Number(selectedPriceRange))
-    //         setResults(filteredProducts);
-    //         if (searchTerm === '' && productFilter.length > 0) {
-            
-    //             const filteredProducts = results.filter((product) =>
-    //             (
     
-    //                 productFilter.includes(product.category)
-    //             )
-    
-    //             );
-    //             setEnableSearch(true);
-    //             setResults(filteredProducts);
-    //         }
-            
-    //          else if (searchTerm && productFilter.length === 0) {
-    //             const filteredProducts = results.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
-    //             console.log('$$$',filteredProducts)
-    //             // if(filteredProducts.length === 0){
-    //             //     setEnableSearch(false);
-    //             // }
-                
-    //             setResults(filteredProducts);
-    //         }else if(searchTerm && productFilter.length > 0){
-    //             console.log('when both')
-                
-    //             const filteredProducts = results.filter((product) =>
-    //             (
-    
-    //                 productFilter.includes(product.category)
-    //             )
-    
-    //             );
-    //             const newFilteredProducts = filteredProducts.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
-    //             setEnableSearch(true);
-    //             if(newFilteredProducts.length === 0) {
-    //                 setResults([]);
-    //             }
-    //             setEnableSearch(true);
-    //             setResults(newFilteredProducts)
-    //         } 
-    //     }
-    //     else{
-    //         if (searchTerm === '' && productFilter.length > 0) {
-            
-    //             const filteredProducts = products.filter((product) =>
-    //             (
-    
-    //                 productFilter.includes(product.category)
-    //             )
-    
-    //             );
-    //             console.log(filteredProducts)
-    //             setEnableSearch(true);
-    //             setResults(filteredProducts);
-    //         }
-                
-    //              else if (searchTerm && productFilter.length === 0) {
-    //                 const filteredProducts = products.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
-    //                 console.log('$$$',filteredProducts)
-    //                 // if(filteredProducts.length === 0){
-    //                 //     setEnableSearch(false);
-    //                 // }
-                    
-    //                 setResults(filteredProducts);
-    //             }else if(searchTerm && productFilter.length > 0){
-    //                 console.log('when both')
-                    
-    //                 const filteredProducts = products.filter((product) =>
-    //                 (
-        
-    //                     productFilter.includes(product.category)
-    //                 )
-        
-    //                 );
-    //                 const newFilteredProducts = filteredProducts.filter((product) => (product.name.toLowerCase().includes(searchTerm.toLowerCase())))
-    //                 setEnableSearch(true);
-    //                 if(newFilteredProducts.length === 0) {
-    //                     setResults([]);
-    //                 }
-    //                 setEnableSearch(true);
-    //                 setResults(newFilteredProducts)
-    //             }else if(productFilter.length === 0){
-    //                 setResults(products);
-    //             } 
-    //     }
-    //     setEnableSearch(true);
-    //     return results;
-        
-        
-        
-    // }
-
 
 
    const handleFilter = () => {
-    const filteredProducts = products.filter((product) => (
+    let  filteredProducts = [];
+    
+         filteredProducts = products.filter((product) => (
         
-        product.price <= Number(selectedPriceRange) &&
-        (productFilter.length === 0 || productFilter.includes(product.category)) &&
-        (searchTerm === '' || product.name.toLowerCase().includes(searchTerm.toLowerCase()))
-      ));
+            
+    (product.price <= Number(selectedPriceRange))  &&
+             (productFilter.length === 0 || productFilter.includes(product.category)) &&
+             (searchTerm === '' || product.name.toLowerCase().includes(searchTerm.toLowerCase())))
+           );
+    
+
+      console.log(filteredProducts)
     setEnableSearch(true);
     setResults(filteredProducts);
     
@@ -331,7 +241,7 @@ export const ProductProvider = ({ children, uid }) => {
 
     }
 
-    return (<productContext.Provider value={{orders,getOrders,handleRange, productFilter, orders, handleChange, loadingOrders, addOrders, checkbox, searchTerm, selectedPriceRange, handleChangeCheck, category, setResults, setEnableSearch, enableSearch, results, handleFilter, total, cartTotal, decQty, addQty, removeFromCart, loadingProduct, setLoadingProduct, getCart, navigate, getProducts, products, range, setRange, addProducts, addToCart, cart }}>
+    return (<productContext.Provider value={{loadingOrders,setLoadingOrders,orders,getOrders,handleRange, productFilter, orders, handleChange, loadingOrders, addOrders, checkbox, searchTerm, selectedPriceRange, handleChangeCheck, category, setResults, setEnableSearch, enableSearch, results, handleFilter, total, cartTotal, decQty, addQty, removeFromCart, loadingProduct, setLoadingProduct, getCart, navigate, getProducts, products, range, setRange, addProducts, addToCart, cart }}>
         {children}
 
     </productContext.Provider>)

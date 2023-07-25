@@ -8,8 +8,9 @@ const SignIn = () => {
     const emailRef = useRef();
     const passwordRef = useRef();
 
-    const { signInUser, setIsLoggedIn,loading,setLoading } = useUserValue();
+    const { signInUser, setIsLoggedIn,loading,setLoading ,setPageToggler} = useUserValue();
     useEffect(()=>{
+        setPageToggler('signin');
             setTimeout(()=>{
                 setLoading(false);
             },1000)

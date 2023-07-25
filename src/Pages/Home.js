@@ -31,9 +31,7 @@ const Home = () => {
         
       }, [productFilter,searchTerm,selectedPriceRange]);
      
-    useEffect(()=>{
-        console.log('results : ',results)
-    },[results])
+    
     
 
     return (
